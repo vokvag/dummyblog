@@ -27,7 +27,8 @@ class BlogController extends Controller
      */
     public function create()
     {
-        //
+        //create Data
+        return view('blog.create');
     }
 
     /**
@@ -38,7 +39,21 @@ class BlogController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        //validation
+        $this->validate($request, [
+          'title'=>'required',
+          'description'=>'required',
+        ]);
+
+
+        //create Data
+        $blog = new blog;
+        $blog->title = $request->title;
+        $blog->description = $request->description;
+        $blog->save();
+        return redirect()->route('blog.index')->with('alert-success','Data has been saved!');
+
+
     }
 
     /**
@@ -60,7 +75,13 @@ class BlogController extends Controller
      */
     public function edit($id)
     {
-        //
+      $blog = Blog::findOrFail($id);
+      //return to the edit views
+      return view('blog.edit',compact('blog'));
+
+
+
+
     }
 
     /**
@@ -72,7 +93,17 @@ class BlogController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+      //validation
+      $this->validate($request, [
+        'title'=>'required',
+        'description'=>'required',
+      ]);
+
+      $blog = Blog::findOrFail($id);
+      $blog->title = $request->title;
+      $blog->description = $request->description;
+      $blog->save();
+      return redirect()->route('blog.index')->with('alert-success','Data has been saved!');
     }
 
     /**
@@ -83,6 +114,9 @@ class BlogController extends Controller
      */
     public function destroy($id)
     {
-        //
+        //delete Data
+        $blog = Blog::findOrFail($id);
+        $blog->delete();
+        return redirect()->route('blog.index')->with('alert-success','Data has been saved!');
     }
 }
